@@ -1,4 +1,5 @@
 #include <sstream>
+#include <array>
 #include "bw64/bw64.hpp"
 
 #define BOOST_TEST_MODULE ChunkTests
@@ -60,4 +61,12 @@ BOOST_AUTO_TEST_CASE(noise_24bit_uneven_data_chunk_size) {
   BOOST_TEST(bw64File.channels() == 1);
   BOOST_TEST(bw64File.numberOfFrames() == 13);
   BOOST_CHECK(bw64File.chnaChunk() != nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(can_read_all_frames) {
+  Bw64Reader bw64File("testfiles/noise_24bit_uneven_data_chunk_size.wav");
+  BOOST_TEST(bw64File.numberOfFrames() == 13);
+  std::array<float, 13> readBuffer;
+  int readSamples = bw64File.read(readBuffer.data(), 13);
+  BOOST_TEST(readSamples == 13);
 }
